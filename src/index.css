@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Body ocupa toda a tela */
+html, body, #root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f3f4f6; /* bg-gray-100 do Tailwind */
+  color: #1f2937; /* text-gray-800 */
+}
+
+/* Remove estilos padrão de links */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Remove estilos conflitantes de botões */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Garante que o root do React ocupe tudo */
+#root {
+  display: flex;
+  flex-direction: column;
+}
