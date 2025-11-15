@@ -1,8 +1,8 @@
-# 🎓 Portal Acadêmico - Back-end
+ Portal Acadêmico - Back-end
 
 Sistema de gerenciamento acadêmico desenvolvido com **Kotlin + Spring Boot + PostgreSQL**.
 
-## 🚀 Tecnologias
+## Tecnologias
 
 - **Kotlin** 1.9+
 - **Spring Boot** 3.x
@@ -12,7 +12,7 @@ Sistema de gerenciamento acadêmico desenvolvido com **Kotlin + Spring Boot + Po
 - **Maven**
 - **Java** 21
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 Antes de começar, você precisa ter instalado:
 
@@ -21,7 +21,7 @@ Antes de começar, você precisa ter instalado:
 - [PostgreSQL 17](https://www.postgresql.org/download/)
 - IDE recomendada: [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
-## 🔧 Configuração do Banco de Dados
+## Configuração do Banco de Dados
 
 ### 1. Criar o banco de dados
 
@@ -70,7 +70,7 @@ INSERT INTO academico (id, matricula)
 VALUES ((SELECT id FROM usuario WHERE email = 'pedro.oliveira@aluno.com'), '2024001');
 ```
 
-## 🏃 Como Executar
+## Como Executar
 
 ### Opção 1: Via IntelliJ IDEA (Recomendado)
 
@@ -99,13 +99,13 @@ mvn clean package
 java -jar target/portalAcademico-0.0.1-SNAPSHOT.jar
 ```
 
-## ✅ Verificar se está funcionando
+## Verificar se está funcionando
 
 - A aplicação deve iniciar na porta **8080**
 - Acesse: http://localhost:8080/api/turmas
 - Deve retornar uma lista vazia `[]` ou as turmas cadastradas
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 src/main/kotlin/com.reKotlin.portalAcademico/
@@ -117,7 +117,7 @@ src/main/kotlin/com.reKotlin.portalAcademico/
 └── servico/          # Lógica de negócio
 ```
 
-## 🔌 Endpoints da API
+## Endpoints da API
 
 ### Turmas
 
@@ -142,7 +142,7 @@ src/main/kotlin/com.reKotlin.portalAcademico/
 }
 ```
 
-## 🐛 Problemas Comuns
+## Problemas Comuns
 
 ### Erro: "Connection refused" ao PostgreSQL
 
@@ -167,7 +167,7 @@ server.port=8081
 2. Banco de dados `reKotlin` existe
 3. Usuário e senha estão corretos em `application.properties`
 
-## 👥 Credenciais de Teste
+## Credenciais de Teste
 
 **Professor:**
 - Email: `joao.silva@professor.com`
