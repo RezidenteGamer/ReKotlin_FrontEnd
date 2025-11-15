@@ -375,27 +375,3 @@ export function useAuth() {
  *   return children;
  * }
  */
-
-/**
- * =============================================================================
- * OBSERVAÇÕES DE SEGURANÇA
- * =============================================================================
- * 
- * ⚠️ IMPORTANTE PARA PRODUÇÃO:
- * 
- * 1. localStorage NÃO É SEGURO para tokens sensíveis
- *    - Use httpOnly cookies para tokens JWT
- *    - Implemente refresh tokens
- * 
- * 2. Senhas em texto plano são INSEGURAS
- *    - Este projeto é acadêmico
- *    - Em produção, use hash (BCrypt) no back-end
- * 
- * 3. Validação no front-end NÃO É SUFICIENTE
- *    - Sempre valide no back-end também
- *    - O front-end pode ser manipulado
- * 
- * 4. Implemente timeout de sessão
- *    - Logout automático após inatividade
- *    - Revalidação periódica com o servidor
- */
