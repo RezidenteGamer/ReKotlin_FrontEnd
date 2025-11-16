@@ -1,173 +1,116 @@
- Portal Acadêmico - Back-end
+# 🎓 Portal Acadêmico - Front-end
 
-Sistema de gerenciamento acadêmico desenvolvido com **Kotlin + Spring Boot + PostgreSQL**.
+Interface web moderna para gerenciamento acadêmico desenvolvida com **React + Tailwind CSS**.
 
 ## Tecnologias
 
-- **Kotlin** 1.9+
-- **Spring Boot** 3.x
-- **Spring Data JPA**
-- **Spring Security**
-- **PostgreSQL** 17
-- **Maven**
-- **Java** 21
+- **React** 18
+- **React Router DOM** 6
+- **Axios** (requisições HTTP)
+- **Tailwind CSS** (estilização)
+- **Vite** (build tool)
 
 ## Pré-requisitos
 
 Antes de começar, você precisa ter instalado:
 
-- [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
-- [Maven](https://maven.apache.org/download.cgi)
-- [PostgreSQL 17](https://www.postgresql.org/download/)
-- IDE recomendada: [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+- [Node.js](https://nodejs.org/) 18+ 
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 
-## Configuração do Banco de Dados
+## Instalação
 
-### 1. Criar o banco de dados
+### 1. Instalar dependências
 
-Abra o PostgreSQL (psql ou pgAdmin) e execute:
+```bash
+# Navegar até a pasta do projeto
+cd portal-academico-frontend
 
-```sql
-CREATE DATABASE reKotlin;
+# Instalar dependências
+npm install
 ```
 
-### 2. Criar usuário (opcional)
+### 2. Configurar URL da API
 
-Se quiser usar um usuário diferente do padrão:
+O front-end está configurado para se conectar ao back-end em `http://localhost:8080`.
 
-```sql
-CREATE USER seu_usuario WITH PASSWORD 'sua_senha';
-GRANT ALL PRIVILEGES ON DATABASE reKotlin TO seu_usuario;
-```
+Se o back-end estiver em outra porta, edite o arquivo `src/servicos/api.js`:
 
-### 3. Configurar credenciais
-
-Edite o arquivo `src/main/resources/application.properties`:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/reKotlin
-spring.datasource.username=postgres  # Seu usuário
-spring.datasource.password=root      # Sua senha
-```
-
-### 4. Popular com dados de teste
-
-Execute este SQL para criar usuários de teste:
-
-```sql
--- Professor 1
-INSERT INTO usuario (tipo_usuario, email, nome, senha_plana) 
-VALUES ('PROFESSOR', 'joao.silva@professor.com', 'Prof. João Silva', '123456');
-
-INSERT INTO professor (id, departamento) 
-VALUES ((SELECT id FROM usuario WHERE email = 'joao.silva@professor.com'), 'Ciência da Computação');
-
--- Acadêmico 1
-INSERT INTO usuario (tipo_usuario, email, nome, senha_plana) 
-VALUES ('ACADEMICO', 'pedro.oliveira@aluno.com', 'Pedro Oliveira', '123456');
-
-INSERT INTO academico (id, matricula) 
-VALUES ((SELECT id FROM usuario WHERE email = 'pedro.oliveira@aluno.com'), '2024001');
+```javascript
+const api = axios.create({
+    baseURL: 'http://localhost:8080/api', // Altere aqui se necessário
+    headers: {
+        'Content-Type': 'application/json',
+    }
+});
 ```
 
 ## Como Executar
 
-### Opção 1: Via IntelliJ IDEA (Recomendado)
-
-1. Abra o projeto no IntelliJ
-2. Aguarde o Maven baixar as dependências
-3. Clique com botão direito em `PortalAcademicoApplication.kt`
-4. Selecione **"Run 'PortalAcademicoApplication'"**
-
-### Opção 2: Via linha de comando
+### Modo Desenvolvimento
 
 ```bash
-# Navegar até a pasta do projeto
-cd caminho/para/portalAcademico
-
-# Compilar e executar
-mvn spring-boot:run
+npm run dev
 ```
 
-### Opção 3: Gerar JAR e executar
+A aplicação abrirá automaticamente em: **http://localhost:5173**
+
+### Build para Produção
 
 ```bash
-# Compilar
-mvn clean package
+# Gerar build otimizado
+npm run build
 
-# Executar o JAR
-java -jar target/portalAcademico-0.0.1-SNAPSHOT.jar
+# Preview do build
+npm run preview
 ```
 
 ## Verificar se está funcionando
 
-- A aplicação deve iniciar na porta **8080**
-- Acesse: http://localhost:8080/api/turmas
-- Deve retornar uma lista vazia `[]` ou as turmas cadastradas
+1. Certifique-se que o **back-end está rodando** (porta 8080)
+2. Acesse http://localhost:5173
+3. Deve aparecer a tela de **"Seleção de Tipo de Usuário"**
 
 ## Estrutura do Projeto
 
 ```
-src/main/kotlin/com.reKotlin.portalAcademico/
-├── configuracao/      # Configurações de segurança e CORS
-├── controlador/       # Controllers REST (endpoints da API)
-├── dto/              # Data Transfer Objects
-├── modelo/           # Entidades JPA (Usuario, Professor, Academico, Turma)
-├── repositorio/      # Repositories (acesso ao banco)
-└── servico/          # Lógica de negócio
+src/
+├── componentes/       # Componentes reutilizáveis
+│   └── LayoutBase.jsx    # Layout principal com navegação
+├── paginas/          # Páginas da aplicação
+│   ├── ListaTurmas.jsx      # Lista todas as turmas
+│   ├── FormularioTurma.jsx  # Criar/editar turmas
+│   ├── SelecionarTipo.jsx   # Escolher tipo de usuário
+│   └── Login.jsx            # Tela de login
+├── roteamento/       # Configuração de rotas
+│   └── RotasApp.jsx
+├── servicos/         # Integração com API
+│   └── api.js
+├── AuthContext.jsx   # Contexto de autenticação global
+├── main.jsx         # Ponto de entrada
+└── index.css        # Estilos globais
 ```
 
-## Endpoints da API
+## 🎨 Funcionalidades
 
-### Turmas
+### Para Todos os Usuários
+-  Login com seleção de tipo (Professor/Acadêmico)
+-  Visualizar lista de turmas
+-  Buscar turmas por nome
+-  Logout
 
-- `GET /api/turmas` - Listar todas as turmas
-- `GET /api/turmas/buscar?nome=X` - Buscar turmas por nome
-- `POST /api/turmas` - Criar nova turma
-- `PUT /api/turmas/{id}` - Atualizar turma
-- `DELETE /api/turmas/{id}` - Excluir turma
-- `POST /api/turmas/{idTurma}/matricular/{idAcademico}` - Matricular acadêmico
-- `DELETE /api/turmas/{idTurma}/remover/{idAcademico}` - Remover acadêmico
+### Para Professores
+-  Criar novas turmas
+-  Editar turmas existentes
+-  Excluir turmas
+-  Visualizar alunos matriculados
 
-### Autenticação
+### Para Acadêmicos
+-  Matricular-se em turmas
+-  Visualizar turmas disponíveis
 
-- `POST /api/auth/login` - Fazer login
+## 👥 Credenciais de Teste
 
-**Exemplo de body para criar turma:**
-```json
-{
-  "nome": "Programação Web",
-  "descricao": "Curso de desenvolvimento web full-stack",
-  "professorId": 1
-}
-```
-
-## Problemas Comuns
-
-### Erro: "Connection refused" ao PostgreSQL
-
-**Solução:** Certifique-se que o PostgreSQL está rodando:
-
-# Windows
-# Procure por "Services" e verifique se PostgreSQL está rodando
-```
-
-### Erro: "Port 8080 already in use"
-
-**Solução:** Outra aplicação está usando a porta 8080. Encerre-a ou mude a porta em `application.properties`:
-
-```properties
-server.port=8081
-```
-
-### Erro ao conectar com banco de dados
-
-**Solução:** Verifique se:
-1. PostgreSQL está rodando
-2. Banco de dados `reKotlin` existe
-3. Usuário e senha estão corretos em `application.properties`
-
-## Credenciais de Teste
+ **Importante:** O back-end deve ter usuários cadastrados!
 
 **Professor:**
 - Email: `joao.silva@professor.com`
@@ -177,6 +120,140 @@ server.port=8081
 - Email: `pedro.oliveira@aluno.com`
 - Senha: `123456`
 
-## 📝 Observações
+## Comunicação com o Back-end
 
-⚠️ **Este é um projeto acadêmico!** 
+O front-end se comunica com o back-end através de:
+
+```javascript
+// Exemplo de requisição
+import { turmaServico } from '../servicos/api';
+
+// Listar turmas
+const turmas = await turmaServico.listarTodas();
+
+// Criar turma
+await turmaServico.criar({
+  nome: "Programação Web",
+  descricao: "Curso de desenvolvimento",
+  professorId: 1
+});
+```
+
+## Problemas Comuns
+
+### Erro: "Network Error" ou "CORS"
+
+**Causa:** Back-end não está rodando ou CORS não está configurado.
+
+**Solução:**
+1. Certifique-se que o back-end está rodando em `http://localhost:8080`
+2. Verifique a configuração de CORS no back-end em `ConfiguracaoSeguranca.kt`
+
+### Tela em branco
+
+**Causa:** Erro no console do navegador.
+
+**Solução:**
+1. Abra o Console (F12)
+2. Verifique se há erros em vermelho
+3. Certifique-se que todos os arquivos estão nos lugares corretos
+
+### "Cannot find module"
+
+**Causa:** Dependências não instaladas.
+
+**Solução:**
+```bash
+# Deletar node_modules e reinstalar
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Login não funciona
+
+**Causa:** Back-end não tem usuários cadastrados ou não está rodando.
+
+**Solução:**
+1. Verifique se o back-end está rodando
+2. Execute o SQL de criação de usuários no PostgreSQL
+3. Tente fazer login com as credenciais corretas
+
+## Fluxo de Uso
+
+### Primeiro Acesso
+
+1. Acesse http://localhost:5173
+2. Selecione **"Sou Professor"** ou **"Sou Acadêmico"**
+3. Faça login com as credenciais de teste
+4. Explore as funcionalidades!
+
+### Professor criando uma turma
+
+1. Faça login como professor
+2. Clique em **"Criar Turma"**
+3. Preencha nome e descrição
+4. Clique em **"Criar Turma"**
+5. A turma aparecerá na lista
+
+### Acadêmico se matriculando
+
+1. Faça login como acadêmico
+2. Visualize as turmas disponíveis
+3. Clique em **"Matricular-se"** na turma desejada
+4. Confirmação aparecerá na tela
+
+## Segurança
+
+**Este é um projeto acadêmico!**
+
+
+## Responsividade
+
+A aplicação é totalmente responsiva e funciona em:
+-  Desktop (1920px+)
+-  Laptop (1366px)
+-  Tablet (768px)
+-  Mobile (375px)
+
+## Customização
+
+### Alterar cores
+
+Edite o arquivo `tailwind.config.js` (se existir) ou use as classes do Tailwind:
+
+```javascript
+// Exemplo: mudar cor primária de azul para roxo
+className="bg-blue-500"  →  className="bg-purple-500"
+```
+
+### Adicionar novo componente
+
+```javascript
+// src/componentes/MeuComponente.jsx
+export function MeuComponente() {
+  return (
+    <div className="p-4">
+      Meu novo componente!
+    </div>
+  );
+}
+```
+
+## Scripts Disponíveis
+
+```bash
+npm run dev      # Inicia servidor de desenvolvimento
+npm run build    # Gera build de produção
+npm run preview  # Preview do build de produção
+npm run lint     # Verifica erros de código (se configurado)
+```
+
+## Observações
+
+- O sistema usa `localStorage` para salvar dados do usuário logado
+- Para logout completo, limpe o localStorage: `localStorage.clear()`
+- As rotas são protegidas: apenas usuários logados podem acessar
+
+## Licença
+
+Este projeto foi desenvolvido para fins acadêmicos.
