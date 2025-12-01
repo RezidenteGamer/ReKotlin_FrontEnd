@@ -20,9 +20,6 @@
  * - Estado global acessível em qualquer componente
  * - Código mais limpo e organizado
  * 
- * @author [Seu Nome]
- * @version 1.0.0
- * @since 2025-01-15
  */
 
 import { createContext, useContext, useState, useEffect } from 'react';

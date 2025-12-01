@@ -6,26 +6,23 @@
  * Esta é a página inicial da aplicação que exibe todas as turmas cadastradas.
  * 
  * REQUISITOS IMPLEMENTADOS:
- * ✅ Exibir lista de entidades (cards) com dados vindos do back-end
- * ✅ Implementar busca/filtro de entidades (por nome)
- * ✅ Permitir exclusão diretamente pela interface
- * ✅ Feedback visual (loading, erro, sucesso)
- * ✅ Componentes reutilizáveis (CardTurma)
- * ✅ FUNCIONALIDADE EXTRA: Sistema de matrícula para acadêmicos
+ *  Exibir lista de entidades (cards) com dados vindos do back-end
+ *  Implementar busca/filtro de entidades (por nome)
+ *  Permitir exclusão diretamente pela interface
+ *  Feedback visual (loading, erro, sucesso)
+ *  Componentes reutilizáveis (CardTurma)
+ *  FUNCIONALIDADE EXTRA: Sistema de matrícula para acadêmicos
  * 
  * Funcionalidades por tipo de usuário:
  * - PROFESSOR: Ver todas as turmas, editar suas turmas, excluir suas turmas
  * - ACADÊMICO: Ver todas as turmas, matricular-se em turmas
  * - NÃO LOGADO: Apenas visualizar (sem ações)
  * 
- * @author [Seu Nome]
- * @version 1.0.0
- * @since 2025-01-15
  */
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { turmaServico } from '../servicos/api';
+import { api, turmaServico } from '../servicos/api';
 import { useAuth } from '../AuthContext';
 
 /**
@@ -63,7 +60,20 @@ import { useAuth } from '../AuthContext';
  *   ehAcademico={false}
  * />
  */
-function CardTurma({ turma, aoExcluir, aoMatricular, ehProfessor, ehAcademico }) {
+function CardTurma({ turma, aoExcluir, aoMatricular, ehProfessor, ehAcademico, inscrito }) {
+  
+  const exportarAlunos = async (idTurma) => {
+    const response = await api.get(`turmas/${idTurma}/alunos/pdf`, {
+      responseType: "blob"
+    });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "alunos.pdf");
+    document.body.appendChild(link);
+    link.click();
+  }
+
   return (
     /**
      * Card principal
@@ -144,13 +154,19 @@ function CardTurma({ turma, aoExcluir, aoMatricular, ehProfessor, ehAcademico })
             Só aparece se ehAcademico === true
           */}
           {ehAcademico && (
-            <button
-              onClick={() => aoMatricular(turma.id)}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition transform hover:scale-105"
-              aria-label={`Matricular-se na turma ${turma.nome}`}
-            >
-              Matricular-se
-            </button>
+            <>
+              <button
+                onClick={() => {
+                  if (!inscrito) {
+                    aoMatricular(turma.id)
+                  }
+                }}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition transform hover:scale-105"
+                aria-label={`Matricular-se na turma ${turma.nome}`}
+              >
+                {inscrito ? 'Matriculado' : 'Matricular-se'}
+              </button>
+            </>
           )}
 
           {/* 
@@ -188,8 +204,22 @@ function CardTurma({ turma, aoExcluir, aoMatricular, ehProfessor, ehAcademico })
               >
                 Excluir
               </button>
+              <button
+                onClick={() => exportarAlunos(turma.id)}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition transform hover:scale-105"
+                aria-label={`Exportar alunos ${turma.nome}`}
+              >
+                Exportar Alunos
+              </button>
             </>
+
           )}
+          <Link
+            to={`/turma/comunicacao/${turma.id}`}
+            className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 text-center rounded-lg font-medium transition transform hover:scale-105"
+          >
+            Comunicação
+          </Link>
         </div>
       </div>
     </div>
@@ -470,7 +500,7 @@ export function ListaTurmas() {
       if (e.response?.status === 404) {
         alert('Turma ou acadêmico não encontrado.');
       } else {
-        alert('Erro ao realizar matrícula. Você pode já estar matriculado.');
+        alert('Erro ao realizar matrícula. Você já está matriculado.');
       }
       console.error('Erro ao matricular:', e);
     }
@@ -668,6 +698,7 @@ export function ListaTurmas() {
                 aoMatricular={lidarComMatricula} // Função de callback
                 ehProfessor={ehProfessor()}    // Boolean
                 ehAcademico={ehAcademico()}    // Boolean
+                inscrito={turma.inscrito}
               />
             ))
           )}

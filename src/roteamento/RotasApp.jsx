@@ -36,6 +36,7 @@ import { ListaTurmas } from '../paginas/ListaTurmas';
 import { FormularioTurma } from '../paginas/FormularioTurma';
 import { SelecionarTipo } from '../paginas/SelecionarTipo';
 import { Login } from '../paginas/Login';
+import { Comunicacao } from '../paginas/Comunicacao';
 
 /**
  * =============================================================================
@@ -324,6 +325,11 @@ export function RotasApp() {
             <Route 
               path="turma/editar/:idTurma" 
               element={<FormularioTurma />} 
+            />
+
+            <Route 
+              path="turma/comunicacao/:idTurma" 
+              element={<Comunicacao />} 
             />
           </Route>
 

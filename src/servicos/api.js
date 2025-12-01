@@ -27,7 +27,7 @@ import axios from 'axios';
  * Criamos uma instância customizada do Axios com configurações pré-definidas.
  * Isso evita ter que repetir a URL base e headers em cada requisição.
  */
-const api = axios.create({
+export const api = axios.create({
     /**
      * URL base do back-end
      * Todas as requisições serão feitas para: http://localhost:8080/api/...
